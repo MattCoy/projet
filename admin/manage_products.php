@@ -33,7 +33,7 @@ require_once('../includes/connBdd.php');
 			<div class="col-md-6">
 				<?php
 				//si les variables existent, que l'email est valide et que le mot de passe et le pseudo ne sont pas vides
-				if(isset($_POST['name']) AND isset($_POST['price']) AND isset($_POST['idCategory']) AND isset($_POST['available']) AND isset($_FILES['picture'])  AND !empty($_POST['name']) AND !empty($_POST['price']) AND !empty($_POST['idCategory']) AND !empty($_POST['available'])){
+				if(isset($_POST['name']) AND isset($_POST['price']) AND isset($_POST['idCategory']) AND isset($_POST['available']) AND isset($_FILES['picture'])  AND !empty($_POST['name']) AND !empty($_POST['price']) AND !empty($_POST['idCategory']) ){
 
 					$maxfilesize = 5242880; //1 Mo
 					if($_FILES['picture']['error'] === 0 AND $_FILES['picture']['size'] < $maxfilesize){
@@ -71,7 +71,7 @@ require_once('../includes/connBdd.php');
 
 							//echo $imageWidth;
 							//je décide de la largeur des miniatures
-							$newWidth = 200;
+							$newWidth = 350;
 							//on calcule la nouvelle hauteur
 							$newHeight = ($imageHeight * $newWidth) / $imageWidth;
 
@@ -148,7 +148,7 @@ require_once('../includes/connBdd.php');
 				$categories = $reponseCat->fetchAll();
 				?>
 
-				<form method="POST" enctype="multipart/form-data">
+				<form method="POST" action="manage_products.php" enctype="multipart/form-data">
 					<div class="form-group">
 						<label>Nom du produit</label>
 						<input type="text" name="name" class="form-control">
@@ -184,8 +184,37 @@ require_once('../includes/connBdd.php');
 			<div class="col-md-6">
 				<h2>Liste des utilisateurs</h2>
 				<?php
+				//si on souhaite supprimer un produit
+				if(isset($_GET['delete']) AND isset($_GET['IDProduct']) AND ctype_digit($_GET['IDProduct'])){
+					//on récupère d'abord le nom du fichier image pour pouvoir les effacer
+					$reponse = $bdd->prepare('SELECT picture FROM products WHERE ID = :id');
+					$reponse->bindValue(':id', $_GET['IDProduct'], PDO::PARAM_INT);
+					$reponse->execute();
+					$picture = $reponse->fetch();
+					//requête de suppression
+					$reponse = $bdd->prepare('DELETE FROM products WHERE ID = :id');
+					$reponse->bindValue(':id', $_GET['IDProduct'], PDO::PARAM_INT);
+					if($reponse->execute()){
+						//produit supprimé de la bdd, on efface les fichiers image
+						unlink('../uploads/' . $picture['picture']);
+						unlink('../uploads/thumbnails/' . $picture['picture']);
+						?>
+						<div class="alert alert-success">
+							<strong>Success!</strong> Produit supprimé
+						</div>
+						<?php
+					}
+					else{
+						?>
+						<div class="alert alert-success">
+							<strong>Error!</strong> produit non suprimé
+						</div>
+						<?php	
+
+					}
+				}
 				//récupération de tout les produits du site
-				$reponse = $bdd->prepare('SELECT name, price, available, title, creation_date, picture FROM products INNER JOIN categories ON products.idCategory = categories.ID');
+				$reponse = $bdd->prepare('SELECT products.ID, name, price, available, title, creation_date, picture FROM products INNER JOIN categories ON products.idCategory = categories.ID');
 				$reponse->execute();
 				$products = $reponse->fetchAll();
 				//création de la liste html
@@ -200,6 +229,7 @@ require_once('../includes/connBdd.php');
 						echo '	<li>' . $product['price'] . '</li>';
 						echo '	<li>disponible : ' . $dispo . '</li>';
 						echo '	<li>' . $product['title'] . '</li>';
+						echo '	<li><a href="manage_products.php?IDProduct=' . $product['ID'] . '&delete">supprimer</a></li>';
 						echo '</ul></li>';
 					}
 					?>

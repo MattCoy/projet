@@ -8,9 +8,15 @@ get all slides from slider table
 returns array of slides
 
 */
-function getSlides($bdd){
-	$reponse = $bdd->prepare('SELECT * FROM slider');
+function getProducts($bdd){
+	$reponse = $bdd->prepare('SELECT * FROM products');
 	$reponse->execute();
 	return $reponse->fetchAll();
+}
 
+function getNProducts($bdd, $n){
+	$reponse = $bdd->prepare('SELECT * FROM products LIMIT :limit');
+	$reponse->bindValue(':limit', $n, PDO::PARAM_INT);
+	$reponse->execute();
+	return $reponse->fetchAll();
 }
