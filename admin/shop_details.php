@@ -90,15 +90,7 @@ require_once('../includes/connBdd.php');
 				</form>
 			</div>
 			<div class="col-md-6">
-				<h2>Slider</h2>
-				<form method="POST" enctype="multipart/form-data">
-					<div class="form-group">
-						<label>Slide</label>
-						<input type="text" name="slide" class="form-control" value="">
-					</div>					
-					<button type="submit" class="btn btn-default">Ajouter un slide</button>
-				</form>
-				
+				<h2>Et alors ? Y a rien là ?</h2>
 			</div>
 		</div>
 	</div>

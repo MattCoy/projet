@@ -7,7 +7,7 @@
 			<div class="col-md-6 col-xs-6 text-center menu-1">
 				<ul>
 					<li class="has-dropdown">
-						<a href="product.html">Shop</a>
+						<a href="products.php">Shop</a>
 						<ul class="dropdown">
 							<li><a href="single.html">Single Shop</a></li>
 						</ul>
