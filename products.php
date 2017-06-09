@@ -100,8 +100,13 @@ require_once('includes/productsModel.php');
 				</div>
 			</div>
 			<?php 
-			//récupération des produits
-			$products = getProducts($bdd);
+			if(isset($_GET['search']) AND !empty($_GET['search'])){
+				$products = getSearchproducts($bdd, $_GET['search'], $_GET['order']);
+			}
+			else{
+				//pas de recherche, récupération de tout les produits
+				$products = getProducts($bdd);	
+			}			
 			$compteur = 0;
 			foreach($products as $product){
 				if($compteur%4 == 0){
