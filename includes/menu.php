@@ -41,7 +41,17 @@
 							</div>
 						</form>
 					</li>
-					<li class="shopping-cart"><a href="#" class="cart"><span><small>0</small><i class="icon-shopping-cart"></i></span></a></li>
+					<li >
+						<form action="admin/index.php" method="POST">
+								<div class="input-group">
+									<input type="text" placeholder="email" name="email">
+									<input type="text" placeholder="pass" name="mdp">								
+									<span class="input-group-btn">
+										<button class="btn btn-primary" type="submit" style="color:grey;">log in</button>
+									</span>
+								</div>
+							</form>
+					</li>
 				</ul>
 			</div>
 		</div>
